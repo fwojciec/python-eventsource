@@ -1,0 +1,4 @@
+black==19.10b0
+mypy @ git+git://github.com/python/mypy.git@8748e69cccb8606fcfc03d336382b2836b7b29fe
+pylint==2.5.2
+pytest==5.4.2
