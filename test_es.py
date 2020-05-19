@@ -1,4 +1,5 @@
-from es import Order, OrderCreated, StatusChanged
+from es import Order
+from events import OrderCreated, StatusChanged
 
 
 def test_should_create_order():
@@ -8,5 +9,5 @@ def test_should_create_order():
 
 def test_should_emit_set_status_event():
     order = Order([OrderCreated(user_id=1)])
-    order.set_status("confirmed")
+    order.status = "confirmed"
     assert order.changes == [StatusChanged(new_status="confirmed")]
