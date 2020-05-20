@@ -1,5 +1,5 @@
 import asyncio
-import json
+from json import loads
 from typing import Callable, List, Tuple
 import asyncpg
 from asyncpg.pool import Pool
@@ -30,14 +30,14 @@ def callback(_conn: asyncpg.Connection, _pid: str, _channel: str, payload: str):
     # print(conn)
     # print(pid)
     # print(channel)
-    print(json.loads(payload))
+    print(loads(payload))
 
 
 async def main():
     settings = Settings()
     pool = await asyncpg.create_pool(settings.pg_dsn)
     er = EventProcessor(pool)
-    await er.add_listener("test", callback)
+    await er.add_listener("events", callback)
 
     while True:
         try:
