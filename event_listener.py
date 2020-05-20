@@ -20,7 +20,8 @@ class EventProcessor:
         self.listeners.append((conn, channel, callback))
 
     async def disconnect(self):
-        for conn, channel, callback in self.listeners:
+        while self.listeners:
+            conn, channel, callback = self.listeners.pop()
             await conn.remove_listener(channel, callback)
             await self.pool.release(conn)
 

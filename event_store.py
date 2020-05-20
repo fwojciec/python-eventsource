@@ -98,6 +98,7 @@ class PostgreSQLEventStore(EventStore):
                 )
 
             for event in events:
+                payload = json.dumps(dataclasses.asdict(event))
                 await conn.execute(
                     """
                     INSERT INTO events (uuid, aggregate_uuid, name, data)
@@ -106,7 +107,10 @@ class PostgreSQLEventStore(EventStore):
                     str(uuid.uuid4()),
                     aggregate_id,
                     event.__class__.__name__,
-                    json.dumps(dataclasses.asdict(event)),
+                    payload,
+                )
+                await conn.execute(
+                    f"NOTIFY events, '{aggregate_id}_{event.__class__.__name__}_{payload}'"
                 )
         finally:
             await self.pool.release(conn)
