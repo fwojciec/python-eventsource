@@ -142,3 +142,7 @@ cython_debug/
 
 # local vscode settings
 .vscode
+
+# dotenv
+.env
+.env.test

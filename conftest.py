@@ -1,11 +1,7 @@
-import asyncio
 import pytest
 import asyncpg
 from asyncpg.pool import Pool
-
-
-DSN = "postgres://filip@localhost:5432/event_source_test"
-LOOP = asyncio.get_event_loop()
+from main import Settings
 
 
 async def create_tables(pool: Pool):
@@ -37,9 +33,19 @@ async def drop_tables(pool: Pool):
         )
 
 
+@pytest.fixture(scope="session")
+def settings():
+    yield Settings(_env_file=".env.test")
+
+
+@pytest.fixture(scope="session")
+def dsn(settings):
+    yield settings.pg_dsn
+
+
 @pytest.fixture
-async def pool():
-    pool = await asyncpg.create_pool(DSN)
+async def pool(dsn):
+    pool = await asyncpg.create_pool(dsn)
     await create_tables(pool)
     yield pool
     await drop_tables(pool)
